@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:instant_heat/splash2.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 
-void main() {
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -17,9 +19,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      builder: (context,state){
-        return Splash2();
-      },
     );
   }
 }
@@ -43,4 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+Future initialization(BuildContext? context) async{
+  await Future.delayed(Duration(seconds: 3));
 }
