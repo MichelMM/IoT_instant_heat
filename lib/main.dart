@@ -1,6 +1,5 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:instant_heat/splash2.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,88 +10,154 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Instant Heat',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
+    return const MaterialApp(
+      title: 'Flutter Demo',
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+/// An indicator showing the currently selected page of a PageController
+class DotsIndicator extends AnimatedWidget {
+  // ignore: use_key_in_widget_constructors
+  const DotsIndicator({
+    required this.controller,
+    required this.itemCount,
+    required this.onPageSelected,
+    this.color = Colors.white,
+  }) : super(listenable: controller);
+
+  /// The PageController that this DotsIndicator is representing.
+  final PageController controller;
+
+  /// The number of items managed by the PageController
+  final int itemCount;
+
+  /// Called when a dot is tapped
+  final ValueChanged<int> onPageSelected;
+
+  /// The color of the dots.
+  ///
+  /// Defaults to `Colors.white`.
+  final Color color;
+
+  // The base size of the dots
+  static const double _kDotSize = 8.0;
+
+  // The increase in the size of the selected dot
+  static const double _kMaxZoom = 2.0;
+
+  // The distance between the center of each dot
+  static const double _kDotSpacing = 25.0;
+
+  Widget _buildDot(int index) {
+    double selectedness = Curves.easeOut.transform(
+      max(
+        0.0,
+        1.0 - ((controller.page ?? controller.initialPage) - index).abs(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      builder: (context, state) {
-        return const MyHomePage(title: 'Hola',);
-      },
+    );
+    double zoom = 1.0 + (_kMaxZoom - 1.0) * selectedness;
+    return SizedBox(
+      width: _kDotSpacing,
+      child: Center(
+        child: Material(
+          color: color,
+          type: MaterialType.circle,
+          child: SizedBox(
+            width: _kDotSize * zoom,
+            height: _kDotSize * zoom,
+            child: InkWell(
+              onTap: () => onPageSelected(index),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List<Widget>.generate(itemCount, _buildDot),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  double _currentPosition = 0.0;
-  final _totalDots = 3;
+class MyHomePageState extends State<MyHomePage> {
 
+  final _controller = PageController();
 
-  double _validPosition(double position) {
-    if (position >= _totalDots) return 0;
-    if (position < 0) return _totalDots - 1.0;
-    return position;
-  }
+  static const _kDuration = Duration(milliseconds: 300);
 
-  void _updatePosition(double position) {
-    setState(() => _currentPosition = _validPosition(position));
-  }
+  static const _kCurve = Curves.ease;
+
+  final _kArrowColor = Colors.black.withOpacity(0.8);
+
+  final List<Widget> _pages = <Widget>[
+    // ignore: unnecessary_new
+    new ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: const FlutterLogo(textColor: Colors.blue),
+    ),
+    ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: const FlutterLogo(style: FlutterLogoStyle.stacked, textColor: Colors.red),
+    ),
+    ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: const FlutterLogo(style: FlutterLogoStyle.horizontal, textColor: Colors.green),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: <Widget>[
-        PageView(
-          children: const <Widget>[
-            Walkthrougth(textContent: "Walkthrough one"),
-            Walkthrougth(textContent: "Walkthrough two"),
-            Walkthrougth(textContent: "Walkthrough tree"),
+      body: IconTheme(
+        data: IconThemeData(color: _kArrowColor),
+        child: Stack(
+          children: <Widget>[
+            PageView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: _controller,
+              itemBuilder: (BuildContext context, int index) {
+                return _pages[index % _pages.length];
+              },
+            ),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                color: Colors.grey[800]!.withOpacity(0.5),
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: DotsIndicator(
+                    controller: _controller,
+                    itemCount: _pages.length,
+                    onPageSelected: (int page) {
+                      _controller.animateToPage(
+                        page,
+                        duration: _kDuration,
+                        curve: _kCurve,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
-          onPageChanged: (double position) {setState(() => _currentPosition = _validPosition(position));} ,
         ),
-        Positioned(
-          top: MediaQuery.of(context).size.height * 0.7,
-          // left: MediaQuery.of(context).size.width * 0.35,
-          child: Padding(
-            padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.38),
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: DotsIndicator(
-                  dotsCount: _totalDots,
-                  position: _currentPosition,
-                  decorator: const DotsDecorator(
-                      color: Colors.grey,
-                      activeColor: Color.fromARGB(255, 80, 80, 80)),
-                )),
-          ),
-        )
-      ],
-    ));
-  }
-}
-
-class Walkthrougth extends StatelessWidget {
-  final String textContent;
-  const Walkthrougth({Key? key, required this.textContent}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(color: Colors.redAccent),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Center(child: Text(textContent)),
+      ),
     );
   }
 }
