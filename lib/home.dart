@@ -1,15 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SecondScreen extends StatelessWidget {
+class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Screen"),
+        title: const Text("Second Screen"),
       ),
       backgroundColor: Colors.white54,
-      body: Center(
+      body: const Center(
         child: Text("Second Screen"),
       ),
     );

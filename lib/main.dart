@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'SelectDevice.dart';
+import 'package:instant_heat/selected_device.dart';
+import 'package:context_holder/context_holder.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -9,14 +11,20 @@ void main() {
 
 
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: MyHomePage(),
+      navigatorKey: ContextHolder.key,
+      home: const MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -154,8 +162,7 @@ class MyHomePageState extends State<MyHomePage> {
           const SizedBox(height: 20,),
           OutlinedButton(
             onPressed: (){
-              //Navigator.of(context).push(MaterialPageRoute(builder: (_) => SelectDevice());
-
+              Navigator.of(ContextHolder.currentContext).push(MaterialPageRoute(builder: (_) => const SelectedDevice()));
             },
             child: const Text("¡Empecemos!",style: TextStyle(color: Colors.white)),
             style: ButtonStyle(
