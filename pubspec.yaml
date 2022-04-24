@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_native_splash: ^2.1.5
   google_fonts: ^2.0.0-nullsafety.0
+  context_holder: ^0.0.5
+  syncfusion_flutter_sliders: ^20.1.50
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +31,8 @@ flutter:
     - images/coffe1.png
     - images/coffe2.png
     - images/coffe3.png
+    - images/ideal.png
+    - images/connection.png
 
 
 flutter_native_splash:
