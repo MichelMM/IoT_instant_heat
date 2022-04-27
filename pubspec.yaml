@@ -18,6 +18,9 @@ dependencies:
   google_fonts: ^2.0.0-nullsafety.0
   context_holder: ^0.0.5
   syncfusion_flutter_sliders: ^20.1.50
+  connectivity_plus: ^2.3.0
+  network_info_plus: ^2.1.3
+  
 
 dev_dependencies:
   flutter_test:
