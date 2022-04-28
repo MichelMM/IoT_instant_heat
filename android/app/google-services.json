@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "825320487691",
+    "project_id": "instantheat-24a7e",
+    "storage_bucket": "instantheat-24a7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825320487691:android:9eed6fac1d7f9983d6c00e",
+        "android_client_info": {
+          "package_name": "com.example.instant_heat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825320487691-8oh2o500tpo715n2hbp9uh34n45f0q0v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.instant_heat",
+            "certificate_hash": "eb1dd1909cdf2f62978ca63efea76ca0f59736f7"
+          }
+        },
+        {
+          "client_id": "825320487691-r3c37uqvqifhd4f6rno9k2b2o0d8f9n0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsbbpu5CNK8A1oRRNgpZ0by_Ccj5NBeu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825320487691-r3c37uqvqifhd4f6rno9k2b2o0d8f9n0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
