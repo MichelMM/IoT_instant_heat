@@ -1,11 +1,6 @@
-import 'package:context_holder/context_holder.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instant_heat/search_device.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class SelectedDevice extends StatefulWidget {
   const SelectedDevice({ Key? key }) : super(key: key);
 
@@ -26,7 +21,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 40,),
+              const SizedBox(height: 40,),
               Text("Instant Heat",style: GoogleFonts.lato(color: const Color(0xFFFF6A17,), fontSize: 40, fontWeight: FontWeight.bold),),
               const SizedBox(height: 30,),
               SizedBox(child: Text("Seleccione su Dispositivo", style: GoogleFonts.lato(fontSize: 25),textAlign: TextAlign.center), height: 80, width: 240,),
@@ -35,7 +30,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
               SizedBox(width: 300,
               child: TextField(
                 controller: _tazaId,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Ingrese ID de su taza',
                 ),
@@ -44,19 +39,9 @@ class _SelectedDeviceState extends State<SelectedDevice> {
               OutlinedButton(
               onPressed: () async{
                 print(_tazaId.text);
-
-                var collection = FirebaseFirestore.instance.collection('Tazas');
-                var querySnapshot = await collection.get();
-                for (var queryDocumentSnapshot in querySnapshot.docs) {
-                  Map<String, dynamic> data = queryDocumentSnapshot.data();
-                  var id = data['id'];
-                  var red = data['red'];
-                  print(id);
-                  print(red);
-                }
-
-                //Navigator.of(ContextHolder.currentContext).push(MaterialPageRoute(builder: (_) => const SearchDevice()));
-              },
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => SearchDevice(id: _tazaId.text)));
+                
+                },
               child: Text("Siguiente",style: GoogleFonts.lato(fontSize: 25,color: Colors.white)),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFFF6A17)),

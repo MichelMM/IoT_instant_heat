@@ -2,32 +2,38 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:instant_heat/home.dart';
 import 'package:instant_heat/selected_device.dart';
 import 'package:context_holder/context_holder.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  await Hive.initFlutter();
+
+  await Hive.openBox('device');
+  final device = Hive.box('device');
+  var id = device.get('id');
+  var idExist = id!=null;
+  runApp(MyApp(idExist: idExist,));
 }
 
-
-
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  const MyApp({Key? key, required this.idExist}) : super(key: key);
+  final bool idExist;
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   @override
+  
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       navigatorKey: ContextHolder.key,
-      home: const MyHomePage(),
+      home: widget.idExist? Home():MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -109,8 +115,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-
-
   final _controller = PageController();
 
   static const _kDuration = Duration(milliseconds: 300);
@@ -124,53 +128,98 @@ class MyHomePageState extends State<MyHomePage> {
     new ConstrainedBox(
       constraints: const BoxConstraints.expand(),
       child: Column(
-
         children: [
-          Image.asset("images/coffe1.png",height: 420,),
-          const SizedBox(height: 20,),
-          Text("Sabor",style: GoogleFonts.lato(fontSize: 40,fontWeight: FontWeight.bold),),
-          const SizedBox(height: 20,),
-          Text("Elige la temperatura de tu café o té",style: GoogleFonts.lato(fontSize: 22,),),
+          Image.asset(
+            "images/coffe1.png",
+            height: 420,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Sabor",
+            style: GoogleFonts.lato(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Elige la temperatura de tu café o té",
+            style: GoogleFonts.lato(
+              fontSize: 22,
+            ),
+          ),
         ],
       ),
     ),
     ConstrainedBox(
       constraints: const BoxConstraints.expand(),
       child: Column(
-
         children: [
           Image.asset("images/coffe2.png"),
-          const SizedBox(height: 20,),
-          Text("Temperatura",style: GoogleFonts.lato(fontSize: 40,fontWeight: FontWeight.bold),),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Temperatura",
+            style: GoogleFonts.lato(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           Align(
             alignment: Alignment.center,
-            child: Text("Ajusta la temperatura y descubre cómo algunos grados de diferencia pueden hacer que cambie el sabor",style: GoogleFonts.lato(fontSize: 22,),textAlign: TextAlign.center,),
+            child: Text(
+              "Ajusta la temperatura y descubre cómo algunos grados de diferencia pueden hacer que cambie el sabor",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
-    ),ConstrainedBox(
+    ),
+    ConstrainedBox(
       constraints: const BoxConstraints.expand(),
       child: Column(
-
         children: [
           Image.asset("images/coffe3.png", height: 370),
-          const SizedBox(height: 20,),
-          Text("Tiempo",style: GoogleFonts.lato(fontSize: 40,fontWeight: FontWeight.bold),),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Tiempo",
+            style: GoogleFonts.lato(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           Align(
             alignment: Alignment.center,
-            child: Text("Tómate tu tiempo para disfrutar de una bebida caliente perfecta desde el primer sorbo evitar que te prepares una nueva taza de café",style: GoogleFonts.lato(fontSize: 22,),textAlign: TextAlign.center,),
+            child: Text(
+              "Tómate tu tiempo para disfrutar de una bebida caliente perfecta desde el primer sorbo evitar que te prepares una nueva taza de café",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           OutlinedButton(
-            onPressed: (){
-              Navigator.of(ContextHolder.currentContext).push(MaterialPageRoute(builder: (_) => const SelectedDevice()));
+            onPressed: () {
+              Navigator.of(ContextHolder.currentContext).push(
+                  MaterialPageRoute(builder: (_) => const SelectedDevice()));
             },
-            child: const Text("¡Empecemos!",style: TextStyle(color: Colors.white)),
+            child: const Text("¡Empecemos!",
+                style: TextStyle(color: Colors.white)),
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFFF6A17)),
-              padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.fromLTRB(100, 20, 100, 20)),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(const Color(0xFFFF6A17)),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                  const EdgeInsets.fromLTRB(100, 20, 100, 20)),
             ),
           ),
         ],
@@ -180,7 +229,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectedDevice();
     return Scaffold(
       body: IconTheme(
         data: IconThemeData(color: _kArrowColor),

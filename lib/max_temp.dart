@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:context_holder/context_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instant_heat/home.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:http/http.dart' as http;
 
 class MaxTemp extends StatefulWidget {
-  const MaxTemp({Key? key}) : super(key: key);
+  const MaxTemp({Key? key, required this.min}) : super(key: key);
+  final double min;
 
   @override
   State<MaxTemp> createState() => _MaxTempState();
@@ -13,7 +17,7 @@ class MaxTemp extends StatefulWidget {
 
 class _MaxTempState extends State<MaxTemp> {
 
-  double _value = 55.0;
+  double _value = 71.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +36,8 @@ class _MaxTempState extends State<MaxTemp> {
               SizedBox(
                 width: 300,
                 child: SfSlider(
-              min: 30.0,
-              max: 100.0,
+              min: widget.min,
+              max: 71.0,
               value: _value,
               activeColor: const Color(0xFF8390A4),
               inactiveColor: const Color(0xFFE6E9F2),
@@ -47,10 +51,25 @@ class _MaxTempState extends State<MaxTemp> {
               ),
               const SizedBox(height: 50,),
               OutlinedButton(
-            onPressed: (){
+            onPressed: () async {
+              var token = "?token=BBFF-MFDeikWJ8zzysRQOhzU5xbnJIpIgdB";
+              var temperature_set_min = "https://industrial.api.ubidots.com/api/v1.6/variables/626b7810e39bed000ae569cd/values" + token;
+              var headers = {
+                'Content-Type': 'application/json',
+              };
+              var data = {
+                "value":_value.round(),
+                "context":{
+                    "type":"max"
+                }
+              };
+              var url = Uri.parse(temperature_set_min);
+              var res = await http.post(url, headers: headers, body: jsonEncode(data));
+              if (res.statusCode != 200 && res.statusCode != 201) throw Exception('http.post error: statusCode= ${res.statusCode}');
+              print(res.body);
               Navigator.of(ContextHolder.currentContext).push(MaterialPageRoute(builder: (_) => const Home()));
             },
-            child: Text("Siguiente",style: GoogleFonts.lato(fontSize: 25,color: Colors.white)),
+            child: Text("Aceptar",style: GoogleFonts.lato(fontSize: 25,color: Colors.white)),
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFFF6A17)),
               padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.fromLTRB(100, 20, 100, 20)),
