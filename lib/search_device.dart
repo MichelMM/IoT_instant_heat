@@ -10,8 +10,8 @@ import 'package:http/http.dart' as http;
 
 class SearchDevice extends StatefulWidget {
   const SearchDevice({Key? key, required this.id}) : super(key: key);
-
   final String id;
+  
 
   @override
   State<SearchDevice> createState() => _SearchDeviceState();
@@ -94,7 +94,7 @@ searchDevice(String id) async {
   var body = json.decode(res.body);
   list = body["results"];
   list.forEach((element) => {
-        if (element["name"] == id) {flag = true}
+        if (element["label"] == id) {flag = true}
       });
   if (flag == true){
     await Hive.openBox('device');

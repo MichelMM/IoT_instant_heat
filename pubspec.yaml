@@ -27,6 +27,13 @@ dependencies:
   twilio_flutter: ^0.0.9
   hive: ^2.1.0
   hive_flutter: ^1.1.0
+  mqtt_client: ^9.6.7
+  provider: ^6.0.2
+  notifications: ^2.0.1
+  
+
+dependency_overrides:
+  args: ^2.1.1
   
 
 dev_dependencies:
@@ -43,6 +50,7 @@ flutter:
     - images/coffe3.png
     - images/ideal.png
     - images/connection.png
+    - images/stats.png
 
 
 flutter_native_splash:

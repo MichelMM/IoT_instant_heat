@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:instant_heat/consumido.dart';
 import 'package:instant_heat/home.dart';
 import 'package:instant_heat/selected_device.dart';
 import 'package:context_holder/context_holder.dart';
@@ -15,8 +16,10 @@ void main() async {
   await Hive.openBox('device');
   final device = Hive.box('device');
   var id = device.get('id');
-  var idExist = id!=null;
-  runApp(MyApp(idExist: idExist,));
+  var idExist = id != null;
+  runApp(MyApp(
+    idExist: idExist,
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -28,12 +31,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       navigatorKey: ContextHolder.key,
-      home: widget.idExist? Home():MyHomePage(),
+      home: widget.idExist ? Home() : MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
